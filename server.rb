@@ -15,7 +15,7 @@ def list_as_json
 
 end
 
-get '/' do
+get '/products/' do
   if not request.accept? 'text/html' and request.accept? 'application/json'
     list.to_json
   else
@@ -23,5 +23,5 @@ get '/' do
   end
 
 end
-get '/:sku' do
+get '/products/:sku' do
 end
