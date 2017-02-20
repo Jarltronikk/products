@@ -1,7 +1,6 @@
 !!!
 %html
   %head
+    %link{ rel: 'import', href: '../product-details-component'}
   %body
-    .item
-      = item[:sku]
-      = item[:price]
+    %product-details-view{'url'=>url}

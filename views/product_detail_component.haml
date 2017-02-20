@@ -3,7 +3,7 @@
   :crossorigin=>"anonymous"}
 
 
-%template#product-template
+%template#product-detail-template
   .product
     .url{:style=>"display: none;"}product
     %h1.name
@@ -11,14 +11,14 @@
 
 :javascript
    var currentScript = document.currentScript
-  customElements.define('product-view',
+  customElements.define('product-details-view',
     class extends HTMLElement {
       constructor() {
         super()
-    var template = currentScript
-            .ownerDocument
-            .getElementById('product-template')
-            .content
+        var template =currentScript
+          .ownerDocument
+          .getElementById('product-detail-template')
+          .content
         var shadowRoot = this.attachShadow({mode: 'open'})
         shadowRoot.appendChild(template.cloneNode(true))
         var url=this.getAttribute('url')

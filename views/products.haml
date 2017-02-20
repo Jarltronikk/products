@@ -1,8 +1,6 @@
 !!!
 %html
   %head
-    %link{ rel: 'import', href: 'products/component'}
+    %link{ rel: 'import', href: 'products/products-component'}
   %body
-    .products
-      - items.each do |uri|
-        %product-view{'url'=>uri}
+    %product-list

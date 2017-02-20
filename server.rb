@@ -27,14 +27,20 @@ get '/products' do
   if want_json?
     list.map{|item|resource_url(item)}.to_json
   else
-    available=  list.select {|product| product[:available]}
-    uris=available.map{|item|resource_url(item)}
-    haml :products, :locals => {:items =>uris}
+    haml :products
   end
 
 end
-get '/products/component' do
+get '/products/products-component' do
+  available=  list.select {|product| product[:available]}
+  uris=available.map{|item|resource_url(item)}
+  haml :products_component, :locals => {:items =>uris}
+end
+get '/products/product-component' do
   haml :product_component
+end
+get '/products/product-details-component' do
+  haml :product_detail_component
 end
 get '/products/:sku' do
   item=list.find{|item|item[:sku]==params['sku']}
