@@ -1,12 +1,13 @@
 %script{:type => "text/javascript", :src=>"https://code.jquery.com/jquery-3.1.1.min.js",
-  :integrity=>"sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=",
-  :crossorigin=>"anonymous"}
+   :integrity=>"sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=",
+   :crossorigin=>"anonymous"}
 
 
 %template#product-template
   .product
     .url{:style=>"display: none;"}product
     %h1.name
+    %slot{:name=>"actions", :class=>"actions"}
 
 
 :javascript
@@ -15,7 +16,7 @@
     class extends HTMLElement {
       constructor() {
         super()
-    var template = currentScript
+        var template = currentScript
             .ownerDocument
             .getElementById('product-template')
             .content
@@ -23,6 +24,11 @@
         shadowRoot.appendChild(template.cloneNode(true))
         var url=this.getAttribute('url')
         shadowRoot.querySelector('.url').innerHTML=url
+        var actions=this.getElementsByClassName('actions')
+        if(actions.length>0){
+          actions[0].setAttribute('url',url)
+          }
+
         $.getJSON(url).done(function(data) {
                         shadowRoot.querySelector('.name').innerHTML=data.name;
                       })

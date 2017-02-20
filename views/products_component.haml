@@ -1,9 +1,8 @@
 %link{ rel: 'import', href: 'product-component'}
 
 %template#products-template
-  .products
-    - items.each do |uri|
-      %product-view{'url'=>uri}
+  - items.each do |uri|
+    %product-view{'url' => uri, :class=>"product-item"}
 
 
 
@@ -19,6 +18,16 @@
           .content
         var shadowRoot = this.attachShadow({mode: 'open'})
         shadowRoot.appendChild(template.cloneNode(true))
-    }
+        var actions=this.getElementsByClassName('actions') [0]
+        if(actions != null)
+        {
+        var elements=shadowRoot.querySelectorAll('.product-item')
+        for (var i = 0; i < elements.length; i++) {
+            var action=actions.cloneNode(true)
+            action.setAttribute("url",elements[i].getAttribute("url"))
+            elements[i].appendChild(action);
+        }
+      }
+      }
   })
 
