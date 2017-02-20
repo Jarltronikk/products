@@ -24,7 +24,7 @@
         var elements=shadowRoot.querySelectorAll('.product-item')
         for (var i = 0; i < elements.length; i++) {
             var action=actions.cloneNode(true)
-            action.setAttribute("url",elements[i].getAttribute("url"))
+            action.setAttribute("product",elements[i].getAttribute("url"))
             elements[i].appendChild(action);
         }
       }

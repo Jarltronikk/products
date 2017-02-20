@@ -26,7 +26,7 @@
         shadowRoot.querySelector('.url').innerHTML=url
         var actions=this.getElementsByClassName('actions')
         if(actions.length>0){
-          actions[0].setAttribute('url',url)
+          actions[0].setAttribute('product',url)
           }
 
         $.getJSON(url).done(function(data) {
