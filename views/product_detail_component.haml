@@ -10,8 +10,9 @@
 
 
 :javascript
+  (function (){
    var currentScript = document.currentScript
-  customElements.define('product-details-view',
+   customElements.define('product-details-view',
     class extends HTMLElement {
       constructor() {
         super()
@@ -31,4 +32,5 @@
                         });;;
     }
   })
+  }())
 
