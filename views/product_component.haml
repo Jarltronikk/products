@@ -7,7 +7,6 @@
   .product
     .url{:style=>"display: none;"}product
     %h1.name
-    %slot{:name=>"actions", :class=>"actions"}
 
 
 :javascript
@@ -25,10 +24,6 @@
         shadowRoot.appendChild(template.cloneNode(true))
         var url=this.getAttribute('url')
         shadowRoot.querySelector('.url').innerHTML=url
-        var actions=this.getElementsByClassName('actions')
-        if(actions.length>0){
-          actions[0].setAttribute('product',url)
-          }
 
         $.getJSON(url).done(function(data) {
                         shadowRoot.querySelector('.name').innerHTML=data.name;

@@ -19,16 +19,6 @@
           .content
         var shadowRoot = this.attachShadow({mode: 'open'})
         shadowRoot.appendChild(template.cloneNode(true))
-        var actions=this.getElementsByClassName('actions') [0]
-        if(actions != null)
-        {
-        var elements=shadowRoot.querySelectorAll('.product-item')
-        for (var i = 0; i < elements.length; i++) {
-          var action=actions.cloneNode(true)
-          action.setAttribute("product",elements[i].getAttribute("url"))
-          elements[i].appendChild(action);
-        }
-      }
       }
   })
   }())
