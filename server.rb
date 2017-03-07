@@ -1,6 +1,9 @@
 require "sinatra"
 require 'json'
 require 'haml'
+require 'bunny'
+require 'sinatra-websocket'
+
 
 error do
   @e = request.env['sinatra_error']
@@ -31,13 +34,21 @@ get '/products' do
   end
 
 end
+lock=Mutex.new
+$actions=[]
+def add_action(uri_template)
+  lock.synchronize do
+    $actions.add uri_template
+  end
+end
+
 get '/products/products-component' do
   available=  list.select {|product| product[:available]}
   uris=available.map{|item|resource_url(item)}
   haml :products_component, :locals => {:items =>uris}
 end
 get '/products/product-component' do
-  haml :product_component
+  haml :product_component,  :locals => {:actions =>$actions}
 end
 get '/products/product-details-component' do
   haml :product_detail_component
@@ -53,6 +64,10 @@ get '/products/:sku' do
   end
 end
 
+#TODO This should be rabbit
+post '/products/actions' do
+  add_action params['url-template']
+end
 
 get '/products/:sku/details' do
   item=list.find{|item|item[:sku]==params['sku']}

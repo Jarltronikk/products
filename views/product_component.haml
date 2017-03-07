@@ -7,6 +7,7 @@
   .product
     .url{:style=>"display: none;"}product
     %h1.name
+    .actions
 
 
 :javascript
@@ -30,7 +31,18 @@
                       })
                       .fail(function() {
                           shadowRoot.querySelector('.name').innerHTML="Error";
-                        });;;
+                        });
+        var addAction=function (urltemplate)
+        {
+          var actionurl=urltemplate.replace("{product}",url)
+          var frame=document.createElement("iframe");
+          $.get(actionurl, function( data ) {
+               frame.html( data );
+            shadowRoot.querySelector('.actions').appendChild(frame)
+              });
+
+        }
+         #{actions.map do |action|  "addAction (\""+action+"\")"  end.join ';'}
     }
   })
   }())
