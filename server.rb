@@ -2,9 +2,42 @@ require "sinatra"
 require 'json'
 require 'haml'
 require 'bunny'
-require 'sinatra-websocket'
 
+$lock=Mutex.new
+$actions={}
+def add_action(key, priority, uri_template)
+  $lock.synchronize do
+    if($actions.has_key? key)
+      if $actions[key][:priority]<priority
+        $actions[key]={:priority=> priority, :uri_template=>uri_template}
+      end
+    else
+      $actions[key]={:priority=> priority, :uri_template=>uri_template}
+    end
+  end
+end
+puts ENV["RABBITMQ"]
+rabbitConn = Bunny.new(ENV["RABBITMQ"])
+rabbitConn.start
+channel=rabbitConn.create_channel
+registryExchange=channel.topic("registry")
 
+queue = channel.queue("", :exclusive => true, :durable=>false)
+queue.bind(registryExchange, :routing_key=>"action.product.registration")
+
+puts "Listening for action.product.registration"
+queue.subscribe(:manual_ack => true, :block => false) do |delivery_info, properties, body|
+  begin
+    puts body
+    message=JSON.parse body
+    add_action message["key"], message["priority"], message["uri-template"]
+  rescue Exception => e
+    puts e
+  end
+  channel.ack(delivery_info.delivery_tag)
+end
+
+registryExchange.publish("what here?", :routing_key => "action.product.registration.request")
 error do
   @e = request.env['sinatra_error']
   puts @e
@@ -34,20 +67,6 @@ get '/products' do
   end
 
 end
-lock=Mutex.new
-$actions={}
-def add_action(key, priority, uri_template)
-  lock.synchronize do
-    if($actions.has_key? name)
-      if $actions[key][:priority]<priority
-        $actions[key]={:priority=> priority, :uri_template=>uri_template}
-      end
-    else
-      $actions[key]={:priority=> priority, :uri_template=>uri_template}
-    end
-  end
-end
-
 get '/products/products-component' do
   available=  list.select {|product| product[:available]}
   uris=available.map{|item|resource_url(item)}
@@ -70,10 +89,6 @@ get '/products/:sku' do
   end
 end
 
-#TODO This should be rabbit
-post '/products/actions' do
-  add_action params['url-template']
-end
 
 get '/products/:sku/details' do
   item=list.find{|item|item[:sku]==params['sku']}

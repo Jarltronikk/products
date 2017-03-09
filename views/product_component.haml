@@ -36,11 +36,8 @@
         {
           var actionurl=urltemplate.replace("{product}",url)
           var frame=document.createElement("iframe");
-          $.get(actionurl, function( data ) {
-               frame.html( data );
-            shadowRoot.querySelector('.actions').appendChild(frame)
-              });
-
+          frame.src=actionurl;
+          shadowRoot.querySelector('.actions').appendChild(frame)
         }
          #{actions.map do |action|  "addAction (\""+action+"\")"  end.join ';'}
     }
