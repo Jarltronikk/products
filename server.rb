@@ -35,10 +35,16 @@ get '/products' do
 
 end
 lock=Mutex.new
-$actions=[]
-def add_action(uri_template)
+$actions={}
+def add_action(key, priority, uri_template)
   lock.synchronize do
-    $actions.add uri_template
+    if($actions.has_key? name)
+      if $actions[key][:priority]<priority
+        $actions[key]={:priority=> priority, :uri_template=>uri_template}
+      end
+    else
+      $actions[key]={:priority=> priority, :uri_template=>uri_template}
+    end
   end
 end
 
@@ -48,7 +54,7 @@ get '/products/products-component' do
   haml :products_component, :locals => {:items =>uris}
 end
 get '/products/product-component' do
-  haml :product_component,  :locals => {:actions =>$actions}
+  haml :product_component,  :locals => {:actions =>$actions.values.map{|action| action[:uri_template]}}
 end
 get '/products/product-details-component' do
   haml :product_detail_component
