@@ -37,7 +37,7 @@ queue.subscribe(:manual_ack => true, :block => false) do |delivery_info, propert
   channel.ack(delivery_info.delivery_tag)
 end
 
-registryExchange.publish("what here?", :routing_key => "action.product.registration.request")
+registryExchange.publish("what here?", :routing_key => "product.registration")
 error do
   @e = request.env['sinatra_error']
   puts @e
