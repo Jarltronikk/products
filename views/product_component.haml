@@ -35,10 +35,15 @@
         var addAction=function (urltemplate)
         {
           var actionurl=urltemplate.replace("{product}",url)
-          var frame=document.createElement("iframe");
-          frame.src=actionurl;
-          shadowRoot.querySelector('.actions').appendChild(frame)
+          var actionElement=document.createElement("div");
+
+          $.get(actionurl, function( data ) {
+               actionElement.innerHTML= data;
+            shadowRoot.querySelector('.actions').appendChild(actionElement)
+              });
+
         }
+        addAction( "test")
          #{actions.map do |action|  "addAction (\""+action+"\")"  end.join ';'}
     }
   })
