@@ -1,7 +1,13 @@
-%script{:type => "text/javascript", :src=>"https://code.jquery.com/jquery-3.1.1.min.js",
-   :integrity=>"sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=",
-   :crossorigin=>"anonymous"}
-
+:javascript
+   if(!window.jQuery)
+   {
+      var script = document.createElement('script');
+      script.type = "text/javascript";
+      script.src = "https://code.jquery.com/jquery-3.1.1.min.js";
+      script.integrity = "sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=";
+      script.crossorigin = "anonymous";
+      document.getElementsByTagName('script')[0] ).appendChild( script );
+   }
 
 %template#product-template
   .product
