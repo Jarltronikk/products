@@ -1,4 +1,4 @@
-%link{ rel: 'import', href: 'product-component'}
+%link{ :rel=> 'import', :href=> 'product-component'}
 
 %template#products-template
   - items.each do |uri|
@@ -8,17 +8,19 @@
 
 :javascript
   (function (){
-  var currentscript= document.currentScript
+  var currentscript= document.currentScript;
+  var template = currentscript
+          .ownerDocument
+          .getElementById('products-template')
+          .content;
   customElements.define('product-list',
     class extends HTMLElement {
       constructor() {
         super()
-        var template = currentscript
-          .ownerDocument
-          .getElementById('products-template')
-          .content
-        var shadowRoot = this.attachShadow({mode: 'open'})
-        shadowRoot.appendChild(template.cloneNode(true))
+        }
+      connectedCallback() {
+        const temp = document.importNode(template, true);
+        this.appendChild(temp);
       }
   })
   }())

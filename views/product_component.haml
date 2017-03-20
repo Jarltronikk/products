@@ -16,25 +16,27 @@
 
 :javascript
   (function (){
-   var currentScript = document.currentScript
+   var currentScript = document.currentScript;
+   var template = currentScript
+            .ownerDocument
+            .getElementById('product-template')
+            .content
     customElements.define('product-view',
     class extends HTMLElement {
       constructor() {
         super()
-        var template = currentScript
-            .ownerDocument
-            .getElementById('product-template')
-            .content
-        var shadowRoot = this.attachShadow({mode: 'open'})
-        shadowRoot.appendChild(template.cloneNode(true))
+        }
+      connectedCallback() {
+        var temp = document.importNode(template, true);
+        this.appendChild(temp);
         var url=this.getAttribute('url')
-        shadowRoot.querySelector('.url').innerHTML=url
-
+        this.querySelector('.url').innerHTML=url
+        var view=this;
         $.getJSON(url).done(function(data) {
-                        shadowRoot.querySelector('.name').innerHTML=data.name;
+                        view.querySelector('.name').innerHTML=data.name;
                       })
                       .fail(function() {
-                          shadowRoot.querySelector('.name').innerHTML="Error";
+                          view.querySelector('.name').innerHTML="Error";
                         });
         var addAction=function (urltemplate)
         {
@@ -43,7 +45,7 @@
 
           $.get(actionurl, function( data ) {
                actionElement.innerHTML= data;
-            shadowRoot.querySelector('.actions').appendChild(actionElement)
+            view.querySelector('.actions').appendChild(actionElement)
               });
 
         }
