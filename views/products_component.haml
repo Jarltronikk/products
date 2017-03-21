@@ -1,8 +1,21 @@
 %link{ :rel=> 'import', :href=> 'product-component'}
 
+%link{:href => "products.css", :rel => "stylesheet"}
 %template#products-template
-  - items.each do |uri|
-    %product-view{'url' => uri, :class=>"product-item"}
+  .container.product-container
+    - items.each do |uri|
+      - if items.count == 3
+        .col-md-4.col-sm-6.col-xs-12
+          %product-view{'url' => uri, :class=>"product-item"}
+      - if items.count == 2
+        .col-md-6.col-sm-6.col-xs-12
+          %product-view{'url' => uri, :class=>"product-item"}
+      - if items.count == 1
+        .col-md-12.col-sm-12.col-xs-12
+          %product-view{'url' => uri, :class=>"product-item"}
+      - if items.count > 3
+        .col-md-3.col-sm-6.col-xs-12
+          %product-view{'url' => uri, :class=>"product-item"}
 
 
 

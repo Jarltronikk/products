@@ -1,17 +1,14 @@
-:javascript
-  if(!window.jQuery)
-  {
-     var script = document.createElement('script');
-     script.type = "text/javascript";
-     script.src = "https://code.jquery.com/jquery-3.1.1.min.js";
-     document.getElementsByTagName('script')[0].appendChild( script );
-  }
 
 %template#product-template
   .product
-    .url{:style=>"display: none;"}product
-    %h1.name
-    .actions
+    .thumbnail
+      .url{:style=>"display: none;"}product
+      %img.img-responsive{:src=>"https://jarltronikk.no/images/jarltronikk.svg", :alt=>"Image missing?"}
+      .caption
+        %h3.name
+        %p.description
+      .variations
+      .actions
 
 
 :javascript
@@ -32,24 +29,50 @@
         var url=this.getAttribute('url')
         this.querySelector('.url').innerHTML=url
         var view=this;
+        var allproducts=[]
+        function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+                          }
+
+        var addAction=function (urltemplate, variant,actiondiv)
+        {
+          var actionurl=urltemplate.replace("{product}",variant.url)
+          var actionElement=document.createElement("div");
+          actionElement.setAttribute("class","action" )
+          $.get(actionurl, function( data ) {
+               actionElement.innerHTML= data;
+               actiondiv.appendChild(actionElement)
+              });
+
+        }
         $.getJSON(url).done(function(data) {
+                        allproducts=data.variants
+                        allproducts.forEach(function(variant){
+                          var actiondiv=document.createElement("div")
+                          actiondiv.setAttribute("id",variant.sku+"-actions")
+                          #{actions.map do |action|  "addAction (\""+action+"\", variant, actiondiv)"  end.join ';'}
+                          view.querySelector('.actions').appendChild(actiondiv)
+                        })
+                        data.variations.forEach(function(variation) {
+                                                var div=document.createElement("div")
+                                                div.setAttribute("class","btn-group " )
+                                                div.setAttribute("role","group")
+                                                //TODO ADD LABEL
+                                                allproducts.map(function(obj) {return obj[variation]}).filter( onlyUnique ).forEach(function(v) {
+                                                  var btn=document.createElement("button")
+                                                  btn.setAttribute("class","btn btn-default" )
+                                                  btn.innerHTML=v
+                                                  div.appendChild(btn)
+                                                })
+                                                view.querySelector('.variations').appendChild(div)
+
+                                               });
                         view.querySelector('.name').innerHTML=data.name;
+                        view.querySelector('.description').innerHTML=data.description;
                       })
                       .fail(function() {
                           view.querySelector('.name').innerHTML="Error";
                         });
-        var addAction=function (urltemplate)
-        {
-          var actionurl=urltemplate.replace("{product}",url)
-          var actionElement=document.createElement("div");
-
-          $.get(actionurl, function( data ) {
-               actionElement.innerHTML= data;
-            view.querySelector('.actions').appendChild(actionElement)
-              });
-
-        }
-         #{actions.map do |action|  "addAction (\""+action+"\")"  end.join ';'}
     }
   })
   }())

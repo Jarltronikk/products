@@ -1,7 +1,8 @@
 !!!
 %html
   %head
-    %link{ rel: 'import', href: 'product-component'}
+    %script(src="https://code.jquery.com/jquery-3.1.1.min.js")
+    %link{ :rel=> 'import', :href=> 'product-component'}
   %body
     %product-view{'url'=>url,:class=>'product'}
 

@@ -1,0 +1,5 @@
+.product-container .img-responsive {
+    display: block;
+    width: auto;
+    max-height:35vw;
+}
