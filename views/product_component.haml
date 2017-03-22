@@ -73,15 +73,19 @@
                         data.variations.forEach(function(variation) {
                                                 selectVariant(variation,"")
                                                 var div=document.createElement("div")
-                                                div.setAttribute("class","btn-group " )
+                                                div.setAttribute("class","btn-group btn-group-justified" )
                                                 div.setAttribute("role","group")
                                                 //TODO ADD LABEL
                                                 allproducts.map(function(obj) {return obj[variation]}).filter( onlyUnique ).forEach(function(v) {
+
+                                                  var innergroup=document.createElement("div")
+                                                  innergroup.setAttribute("class","btn-group " )
                                                   var btn=document.createElement("button")
                                                   btn.setAttribute("class","btn btn-default" )
                                                   btn.innerHTML=v
                                                   btn.onclick = function(){selectVariant(variation,v)};
-                                                  div.appendChild(btn)
+                                                  innergroup.appendChild(btn)
+                                                  div.appendChild(innergroup)
                                                 })
                                                 view.querySelector('.variations').appendChild(div)
 
