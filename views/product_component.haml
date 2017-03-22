@@ -1,4 +1,3 @@
-
 %template#product-template
   .product
     .thumbnail
@@ -45,6 +44,24 @@
               });
 
         }
+        var currentVariants={}
+        var selectVariant=function(variation,variant)
+        {
+          currentVariants[variation]=variant
+          allproducts.forEach(function(product){
+            var actions=view.querySelector("#"+product.sku+"-actions")
+            if(product[variation]==variant)//TODO Support multiple variations:P
+            {
+               actions.setAttribute("style","display: inline")
+               view.querySelector('.name').innerHTML=product.name;
+               view.querySelector('.description').innerHTML=product.description;
+            }
+            else
+            {
+               actions.setAttribute("style","display: none")
+            }
+          })
+        }
         $.getJSON(url).done(function(data) {
                         allproducts=data.variants
                         allproducts.forEach(function(variant){
@@ -54,6 +71,7 @@
                           view.querySelector('.actions').appendChild(actiondiv)
                         })
                         data.variations.forEach(function(variation) {
+                                                selectVariant(variation,"")
                                                 var div=document.createElement("div")
                                                 div.setAttribute("class","btn-group " )
                                                 div.setAttribute("role","group")
@@ -62,6 +80,7 @@
                                                   var btn=document.createElement("button")
                                                   btn.setAttribute("class","btn btn-default" )
                                                   btn.innerHTML=v
+                                                  btn.onclick = function(){selectVariant(variation,v)};
                                                   div.appendChild(btn)
                                                 })
                                                 view.querySelector('.variations').appendChild(div)
