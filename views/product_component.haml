@@ -70,24 +70,30 @@
                           #{actions.map do |action|  "addAction (\""+action+"\", variant, actiondiv)"  end.join ';'}
                           view.querySelector('.actions').appendChild(actiondiv)
                         })
-                        data.variations.forEach(function(variation) {
+                        data.variations.forEach(function(variation) {//Ugh this is naaasty
                                                 selectVariant(variation,"")
-                                                var div=document.createElement("div")
-                                                div.setAttribute("class","btn-group btn-group-justified" )
-                                                div.setAttribute("role","group")
-                                                //TODO ADD LABEL
+                                                var panel=document.createElement("div")
+                                                panel.setAttribute("class","panel panel-default")
+                                                var heading=document.createElement("div")
+                                                heading.setAttribute("class","panel-heading")
+                                                heading.innerHTML="Velg "+variation
+                                                panel.appendChild(heading)
+                                                var bod=document.createElement("div")
+                                                bod.setAttribute("class","panel-body")
+                                                panel.appendChild(bod)
+                                                var btnGroup=document.createElement("div")
+                                                btnGroup.setAttribute("class","btn-group btn-group-lg" )
+                                                btnGroup.setAttribute("role","group")
                                                 allproducts.map(function(obj) {return obj[variation]}).filter( onlyUnique ).forEach(function(v) {
 
-                                                  var innergroup=document.createElement("div")
-                                                  innergroup.setAttribute("class","btn-group " )
                                                   var btn=document.createElement("button")
                                                   btn.setAttribute("class","btn btn-default" )
                                                   btn.innerHTML=v
                                                   btn.onclick = function(){selectVariant(variation,v)};
-                                                  innergroup.appendChild(btn)
-                                                  div.appendChild(innergroup)
+                                                  btnGroup.appendChild(btn)
                                                 })
-                                                view.querySelector('.variations').appendChild(div)
+                                                bod.appendChild(btnGroup)
+                                                view.querySelector('.variations').appendChild(panel)
 
                                                });
                         view.querySelector('.name').innerHTML=data.name;
