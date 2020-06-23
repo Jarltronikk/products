@@ -15,8 +15,8 @@ GEM
       temple (>= 0.8.0)
       tilt
     public_suffix (2.0.5)
-    rack (1.6.5)
-    rack-protection (1.5.3)
+    rack (1.6.13)
+    rack-protection (1.5.5)
       rack
     sinatra (1.4.8)
       rack (~> 1.5)
